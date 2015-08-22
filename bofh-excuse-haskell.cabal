@@ -16,10 +16,19 @@ build-type:          Simple
 extra-source-files:  README.md
 cabal-version:       >=1.10
 
-executable bofh-excuse-haskell
-  main-is:             Main.hs
+library
+  exposed-modules:     Excuse
   build-depends:       base >=4.8 && <4.9,
                        directory >= 1.2.2.0,
                        HTTP >= 4000.2.20,
                        random >= 1.1
+
+
+executable bofh-excuse-exe
+  main-is:             Main.hs
+  build-depends:       base >=4.8 && <4.9,
+                       directory >= 1.2.2.0,
+                       HTTP >= 4000.2.20,
+                       random >= 1.1,
+                       bofh-excuse-haskell
   default-language:    Haskell2010
