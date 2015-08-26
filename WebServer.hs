@@ -3,7 +3,8 @@ module Main where
 
 import Control.Concurrent (forkIO)
 import Control.Monad.IO.Class (liftIO)
-import Data.Text.Lazy (pack)
+import Data.Text.Lazy (pack, replace)
+import System.IO (readFile)
 
 import Control.Concurrent.Chan.Unagi.Bounded
 import Network.Wai.Middleware.RequestLogger
@@ -17,10 +18,11 @@ excuseThread c = do
 
 main :: IO ()
 main = do
+  template <- fmap pack $ readFile "template.html"
   (inChan, outChan) <- newChan 10
   forkIO (excuseThread inChan)
   scotty 8000 $ do
     middleware logStdoutDev
     get "/" $ do
-      (liftIO $ readChan outChan) >>= (\e -> html $ pack e)
+      (liftIO $ readChan outChan) >>= (\e -> html $ replace "#{excuse}" (pack e) template)
 
